@@ -764,7 +764,6 @@ namespace saivs
             std::map<sai_object_id_t, std::list<sai_object_id_t>> m_acl_tbl_grp_mbr_map;
             std::map<sai_object_id_t, std::list<sai_object_id_t>> m_acl_tbl_grp_ports_map;
             std::map<sai_object_id_t, vpp_ace_cntr_info_t> m_ace_cntr_info_map;
-            std::map<sai_object_id_t, sai_object_id_t> m_sflow_port_to_samplepacket;
             std::map<std::string, uint32_t> m_routeStatsIndexMap;
             std::map<sai_object_id_t, std::map<sai_stat_id_t, uint64_t>> m_routeCounterStatsBaseMap;
             std::map<sai_object_id_t, std::map<sai_stat_id_t, uint64_t>> m_routeCounterStatsCarryMap;
@@ -1038,29 +1037,33 @@ namespace saivs
                     _In_ sai_object_id_t entry_id,
                     _In_ const sai_attribute_t *attr);
 
-            sai_status_t sflow_enable_disable(
+            sai_status_t sflowEnableDisable(
                     _In_ sai_object_id_t port_id,
                     _In_ bool enable);
 
-            sai_status_t sflow_sampling_rate_set(
+            sai_status_t sflowSamplingRateSet(
                     _In_ uint32_t rate);
 
-            sai_status_t sflow_hostif_trap_samplepacket_create(
+            sai_status_t sflowHostifTrapSamplePacketCreate(
                      _In_ sai_object_id_t object_id,
                      _In_ sai_object_id_t switch_id,
                      _In_ uint32_t attr_count,
                      _In_ const sai_attribute_t *attr_list);
+
+            sai_status_t sflowPortSamplePacketSet(
+                    _In_ sai_object_id_t portId,
+                    _In_ const sai_attribute_t *attr);
         
-            sai_status_t sflow_hostif_trap_samplepacket_remove(
+            sai_status_t sflowHostifTrapSamplePacketRemove(
                      _In_ const std::string &serializedObjectId);
 
-            sai_status_t sflow_hostif_table_entry_create(
+            sai_status_t sflowHostifTableEntryCreate(
                      _In_ sai_object_id_t object_id,
                      _In_ sai_object_id_t switch_id,
                      _In_ uint32_t attr_count,
                      _In_ const sai_attribute_t *attr_list);
 
-             sai_status_t sflow_hostif_table_entry_remove(
+             sai_status_t sflowHostifTableEntryRemove(
                      _In_ const std::string &serializedObjectId);
             
                 
