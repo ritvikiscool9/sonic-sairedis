@@ -1069,6 +1069,13 @@ vl_api_sflow_sampling_rate_set_reply_t_handler(vl_api_sflow_sampling_rate_set_re
 }
 
 static void
+vl_api_sflow_report_linux_ifindex_set_reply_t_handler(vl_api_sflow_report_linux_ifindex_set_reply_t *msg)
+{
+    int retval = (int)ntohl((uint32_t)msg->retval);
+    set_reply_status(retval);
+}
+
+static void
 vl_api_bfd_udp_session_event_t_handler (vl_api_bfd_udp_session_event_t *msg)
 {
   bool multihop = (htonl(msg->sw_if_index) == (uint32_t)~0);
@@ -1494,6 +1501,7 @@ vl_api_acl_interface_add_del_reply_t_handler(vl_api_acl_interface_add_del_reply_
     _(SR_MSG_ID(SR_SET_ENCAP_SOURCE_REPLY), sr_set_encap_source_reply) \
     _(SFLOW_MSG_ID(SFLOW_ENABLE_DISABLE_REPLY), sflow_enable_disable_reply) \
     _(SFLOW_MSG_ID(SFLOW_SAMPLING_RATE_SET_REPLY), sflow_sampling_rate_set_reply) \
+    _(SFLOW_MSG_ID(SFLOW_REPORT_LINUX_IFINDEX_SET_REPLY), sflow_report_linux_ifindex_set_reply) \
     _(IPIP_MSG_ID(IPIP_ADD_TUNNEL_REPLY), ipip_add_tunnel_reply) \
     _(IPIP_MSG_ID(IPIP_DEL_TUNNEL_REPLY), ipip_del_tunnel_reply)
 
@@ -2812,6 +2820,32 @@ int vpp_sflow_sampling_rate_set(uint32_t sampling_n)
         SAIVPP_ERROR("%s failed(%d) sampling_N %u", __func__, ret, sampling_n);
     } else {
         SAIVPP_INFO("%s sampling_N %u", __func__, sampling_n);
+    }
+
+    VPP_UNLOCK();
+    return ret;
+}
+
+int vpp_sflow_report_linux_ifindex_set(bool enable)
+{
+    vat_main_t *vam = &vat_main;
+    vl_api_sflow_report_linux_ifindex_set_t *mp;
+    int ret;
+
+    VPP_LOCK();
+
+    __plugin_msg_base = sflow_msg_id_base;
+    M(SFLOW_REPORT_LINUX_IFINDEX_SET, mp);
+
+    mp->enable = enable;
+
+    S(mp);
+    WR(ret);
+
+    if (ret) {
+        SAIVPP_ERROR("%s failed(%d) enable %d", __func__, ret, enable);
+    } else {
+        SAIVPP_INFO("%s enable %d", __func__, enable);
     }
 
     VPP_UNLOCK();
