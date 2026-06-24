@@ -778,6 +778,7 @@ namespace saivs
             uint32_t m_acl_default_swindex = 0;
             bool m_acl_default_created = false;
             uint32_t m_sflow_sample_rate = 0;
+            bool m_sflow_report_ifindex_set = false; 
 
         protected: // VPP
 
@@ -1065,6 +1066,9 @@ namespace saivs
 
              sai_status_t sflowHostifTableEntryRemove(
                      _In_ const std::string &serializedObjectId);
+
+             sai_status_t sflowReportLinuxIfIndexSet(
+                     _In_ bool enable);
             
                 
         public: // VPP

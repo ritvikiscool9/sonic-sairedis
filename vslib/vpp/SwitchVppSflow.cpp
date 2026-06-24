@@ -198,6 +198,30 @@ sai_status_t SwitchVpp::sflowPortSamplePacketSet(
 
     m_sflow_sample_rate = rate;
 
+    if (!m_sflow_report_ifindex_set)
+    {
+        if (sflowReportLinuxIfIndexSet(true) == SAI_STATUS_SUCCESS)
+        {
+            m_sflow_report_ifindex_set = true;
+        }
+    }
+
     CHECK_STATUS(sflowEnableDisable(portId, true));
     return sflowSamplingRateSet(rate);
+}
+
+sai_status_t SwitchVpp::sflowReportLinuxIfIndexSet(
+    _In_ bool enable)
+{
+    SWSS_LOG_ENTER();
+
+    int ret = vpp_sflow_report_linux_ifindex_set(enable);
+    if (ret != 0){
+        SWSS_LOG_ERROR("sflow report_linux_ifindex_set failed, status %d", ret);
+        return SAI_STATUS_FAILURE;
+    }
+
+    SWSS_LOG_NOTICE("sflow report-linux-ifindex set to %d", enable);
+
+    return SAI_STATUS_SUCCESS;
 }
