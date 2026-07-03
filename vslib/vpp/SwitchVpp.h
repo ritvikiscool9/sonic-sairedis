@@ -798,6 +798,7 @@ namespace saivs
             uint32_t m_acl_default_swindex = 0;
             bool m_acl_default_created = false;
             uint32_t m_sflow_sample_rate = 0;
+            bool m_sflow_report_ifindex_set = false; 
 
         protected: // VPP
 
@@ -1043,6 +1044,15 @@ namespace saivs
                     _In_ sai_object_id_t ace_cntr_oid,
                     _In_ uint32_t attr_count,
                     _Out_ sai_attribute_t *attr_list);
+        
+            sai_status_t samplePacketCreate(
+                    _In_ sai_object_id_t object_id,
+                    _In_ sai_object_id_t switch_id,
+                    _In_ uint32_t attr_count,
+                    _In_ const sai_attribute_t *attr_list);
+
+            sai_status_t samplePacketRemove(
+                    _In_ const std::string &serializedObjectId);
 
             sai_status_t samplePacketCreate(
                     _In_ sai_object_id_t object_id,
@@ -1073,7 +1083,7 @@ namespace saivs
             sai_status_t sflowPortSamplePacketSet(
                     _In_ sai_object_id_t portId,
                     _In_ const sai_attribute_t *attr);
-
+        
             sai_status_t sflowHostifTrapSamplePacketRemove(
                      _In_ const std::string &serializedObjectId);
 
@@ -1086,7 +1096,10 @@ namespace saivs
              sai_status_t sflowHostifTableEntryRemove(
                      _In_ const std::string &serializedObjectId);
 
-
+             sai_status_t sflowReportLinuxIfIndexSet(
+                     _In_ bool enable);
+            
+                
         public: // VPP
 
             sai_status_t aclGetVppIndices(
